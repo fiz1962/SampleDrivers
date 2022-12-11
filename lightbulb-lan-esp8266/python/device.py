@@ -48,7 +48,7 @@ class S(BaseHTTPRequestHandler):
         if self.path == '/refresh?':
             logging.info("Sending refresh\n")
 
-            OnOffLvL = str(lvl*OnOff)
+            OnOffLvL = str(S.lvl*S.OnOff)
             ref = '{' \
                   '"lvl":"'+OnOffLvL+'",\r\n' \
                   '"clr": {\r\n' \
@@ -60,7 +60,7 @@ class S(BaseHTTPRequestHandler):
 
             self.send_header("Content-type", "text/json")
             self.end_headers()
-            self.wfile.write(ref)
+            self.wfile.write(bytes(ref, 'utf-8'))
             self.send_response(200)
             
         if self.path == '/control?switch=off':
