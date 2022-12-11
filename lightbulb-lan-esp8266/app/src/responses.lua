@@ -8,6 +8,7 @@ function res_handler.ok_200(body)
   --
   -- Update below when fixed:
   --local cnt_type = 'text/plain'
+  
   local cnt_type = ''
   local status = 'HTTP/1.1 200 OK'
   local cache_stat = 'Cache-Control : no-cache, private'
@@ -17,6 +18,9 @@ function res_handler.ok_200(body)
 
   -- Handle Content-Type Header
   if type(body) == 'string' then
+    print('Body string\r\n{')
+    print(body)
+    print('}\r\n')
     -- HTML Response
     if body:find('html') then
       cnt_type = 'Content-Type: text/html'
@@ -26,6 +30,9 @@ function res_handler.ok_200(body)
     end
   -- JSON Response
   elseif type(body) == 'table' then
+    print('Body table\r\n{')
+    print(table.concat(body))
+    print('}\r\n')
     cnt_type = 'Content-Type: application/json'
     body = sjson.encode(body)
   end
@@ -39,8 +46,11 @@ function res_handler.ok_200(body)
   table.insert(res, cache_stat)
   table.insert(res, cnt_length)
   table.insert(res, cnt_type)
+  print('res table\r\n{')
+  print(table.concat(res))
+  print('}\r\n')
+  --res = {table.concat(res, '\r\n'), body}
 
-  res = {table.concat(res, '\r\n'), body}
   return table.concat(res, '\r\n\r\n')
 end
 

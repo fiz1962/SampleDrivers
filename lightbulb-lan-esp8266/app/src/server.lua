@@ -89,6 +89,7 @@ function server_start()
     -- the raw state at the DEV.cache
     -- table JSON formatted.
     elseif httpdata.status:find('/refresh') then
+      print(res.ok_200(DEV.cache))
       return conn:send(res.ok_200(DEV.cache))
 
     -- Resource that allows to

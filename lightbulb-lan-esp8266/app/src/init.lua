@@ -25,13 +25,13 @@ end
 ----------------------------
 -- Init Switch and Switch
 -- Level gpio off by default
-pwm2.setup_pin_hz(MAIN_GPIO, PWM_FREQ, PULSE_PRD, DEV.cache.lvl) -- off
+--pwm2.setup_pin_hz(MAIN_GPIO, PWM_FREQ, PULSE_PRD, DEV.cache.lvl) -- off
 -- Due to the Common anode RGB
 -- LED, duty is inverted
-pwm2.setup_pin_hz(GREEN_GPIO, PWM_FREQ, PULSE_PRD, DEV.cache.clr.g)
-pwm2.setup_pin_hz(RED_GPIO, PWM_FREQ, PULSE_PRD, DEV.cache.clr.r)
-pwm2.setup_pin_hz(BLUE_GPIO, PWM_FREQ, PULSE_PRD, DEV.cache.clr.b)
-pwm2.start()
+--pwm2.setup_pin_hz(GREEN_GPIO, PWM_FREQ, PULSE_PRD, DEV.cache.clr.g)
+--pwm2.setup_pin_hz(RED_GPIO, PWM_FREQ, PULSE_PRD, DEV.cache.clr.r)
+--pwm2.setup_pin_hz(BLUE_GPIO, PWM_FREQ, PULSE_PRD, DEV.cache.clr.b)
+--pwm2.start()
 
 --------------
 -- init server

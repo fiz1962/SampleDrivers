@@ -3,7 +3,8 @@
 function led_lvl_ctl(lvl)
   lvl = (PULSE_PRD / 100) * lvl
   DEV.cache.lvl = lvl
-  return pwm2.set_duty(MAIN_GPIO, math.floor(lvl))
+  return 50
+  --pwm2.set_duty(MAIN_GPIO, math.floor(lvl))
 end
 
 --------------------
@@ -15,9 +16,9 @@ function led_clr_ctl(r, g, b)
   -- due to common anode rgb led,
   -- values will be opposite,
   -- e.g. 255 = off, 0 = on
-  pwm2.set_duty(RED_GPIO, (PULSE_PRD - DEV.cache.clr.r))
-  pwm2.set_duty(GREEN_GPIO, (PULSE_PRD - DEV.cache.clr.g))
-  pwm2.set_duty(BLUE_GPIO, (PULSE_PRD - DEV.cache.clr.b))
+  --pwm2.set_duty(RED_GPIO, (PULSE_PRD - DEV.cache.clr.r))
+  --pwm2.set_duty(GREEN_GPIO, (PULSE_PRD - DEV.cache.clr.g))
+  --pwm2.set_duty(BLUE_GPIO, (PULSE_PRD - DEV.cache.clr.b))
   return
 end
 
