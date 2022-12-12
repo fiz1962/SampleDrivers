@@ -65,7 +65,8 @@ class S(BaseHTTPRequestHandler):
 
             
     def do_POST(self):
-        logging.info("POST request Path: %s\n", str(self.path))
+        strPath = str(self.path)
+        logging.info("POST request Path: %s\n", strPath)
 
         if self.path == '/control?switch=off':
             S.OnOff = 0
@@ -88,7 +89,26 @@ class S(BaseHTTPRequestHandler):
             self.wfile.write(b'{"switch";"on", "code":"200"}')
             self.send_response(200)
 
+        if strPath.startswith('/control?level'):
+            S.lvl = int(strPath.split("=",1)[1])
+            OnOffLvL = str(S.lvl*S.OnOff)
+            ref = '{\r\n' \
+                  '"status":"HTTP/1.1 200 OK",\r\n' \
+                  '"Content-Type":"application/json",\r\n' \
+                  '"Cache-Control":"no-cache, private",\r\n' \
+                  '"lvl":"'+OnOffLvL+'",\r\n' \
+                  '"clr": {\r\n' \
+                  '      "r":"50",\r\n' \
+                  '      "g":"50",\r\n' \
+                  '      "b":"50"\r\n' \
+                  '     }\r\n' \
+                  '}/r/n'
 
+            #self.send_header("Content-type", "text/json")
+            #self.end_headers()
+            self.wfile.write(bytes(ref, 'utf-8'))
+            self.send_response(200)
+            
 def run(server_class=HTTPServer, handler_class=S, port=8190):
     logging.basicConfig(level=logging.INFO)
     server_address = ('0.0.0.0', port)

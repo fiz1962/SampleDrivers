@@ -36,7 +36,7 @@ function command_handler.refresh(_, device)
     log.info(table.concat(data))
     local raw_data = json.decode(table.concat(data))
     --local raw_data = json.decode(table.concat(data)..'}')
-    local calc_lvl = math.floor((raw_data.lvl * 100)/255)
+    local calc_lvl = math.floor(raw_data.lvl)
 
     -- Define online status
     device:online()
