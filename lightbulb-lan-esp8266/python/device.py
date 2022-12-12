@@ -35,8 +35,8 @@ class S(BaseHTTPRequestHandler):
         if self.path == '/LightBulbESP8266.xml':
             logging.info("Sending light bulb xml\n")
 
-            self.send_header("Content-type", "text/xml")
-            self.end_headers()
+            #self.send_header("Content-type", "text/xml")
+            #self.end_headers()
             self.wfile.write(resp)
             self.send_response(200)
 
@@ -45,20 +45,20 @@ class S(BaseHTTPRequestHandler):
 
             OnOffLvL = str(S.lvl*S.OnOff)
             logging.info("OnOffLvl %f, %d, %s\r\n", S.lvl, S.OnOff, OnOffLvL);
-            ref = '{' \
-                  '"status" : "HTTP/1.1 200 OK"' \
-                  '"Content-Type": "application/json"' \
-                  '"Cache-Control" : "no-cache, private"' \
+            ref = '{\r\n' \
+                  '"status":"HTTP/1.1 200 OK",\r\n' \
+                  '"Content-Type":"application/json",\r\n' \
+                  '"Cache-Control":"no-cache, private",\r\n' \
                   '"lvl":"'+OnOffLvL+'",\r\n' \
                   '"clr": {\r\n' \
                   '      "r":"50",\r\n' \
                   '      "g":"50",\r\n' \
                   '      "b":"50"\r\n' \
-                  '     }\r\n'
-            # final curly bracket added in original light bulb driver code
+                  '     }\r\n' \
+                  '}/r/n'
 
-            self.send_header("Content-type", "text/json")
-            self.end_headers()
+            #self.send_header("Content-type", "text/json")
+            #self.end_headers()
             self.wfile.write(bytes(ref, 'utf-8'))
             self.send_response(200)
             

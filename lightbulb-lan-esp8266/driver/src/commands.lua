@@ -31,16 +31,18 @@ function command_handler.refresh(_, device)
     -- JSON payload into table. Last
     -- bracket is missing.
     --
-    -- Update below when fixed:
-    --local raw_data = json.decode(table.concat(data))
-    local raw_data = json.decode(table.concat(data)..'}')
+    -- Update below when fixed:  fixed in python device
+    log.info('Refresh\n')
+    log.info(table.concat(data))
+    local raw_data = json.decode(table.concat(data))
+    --local raw_data = json.decode(table.concat(data)..'}')
     local calc_lvl = math.floor((raw_data.lvl * 100)/255)
 
     -- Define online status
     device:online()
 
     -- Refresh Switch Level
-    log.trace('Refreshing Switch Level')
+    log.trace('Refreshing Switch Level '..calc_lvl)
     device:emit_event(caps.switchLevel.level(calc_lvl))
 
     -- Refresh Switch
@@ -80,8 +82,10 @@ function command_handler.on_off(_, device, command)
   -- Check if success
   if success then
     if on_off == 'off' then
+      command_handler.refresh(_, device)
       return device:emit_event(caps.switch.switch.off())
     end
+    command_handler.refresh(_, device)
     return device:emit_event(caps.switch.switch.on())
   end
   log.error('no response from device')
@@ -142,14 +146,18 @@ function command_handler.send_lan_command(url, method, path, body)
   local res_body = {}
 
   -- HTTP Request
-  local _, code = http.request({
+  local ret, code, headers, status = http.request({
     method=method,
     url=dest_url..'?'..query,
     sink=ltn12.sink.table(res_body),
     headers={
       ['Content-Type'] = 'application/x-www-urlencoded'
     }})
-  print('command handler code '..code)
+  print('command handler ret      '..ret)
+  print('command handler code     '..code)
+  --print('command handler headers  '..headers)
+  --print('command handler status   '..status)
+
   -- Handle response
   code = 200
   if code == 200 then

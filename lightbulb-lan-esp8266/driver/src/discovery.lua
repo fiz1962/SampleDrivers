@@ -30,6 +30,9 @@ local function fetch_device_info(url)
     sink=ltn12.sink.table(res)
   })
 
+  log.info('fetch device info')
+  log.info(table.concat(res))
+
   -- XML Parser
   local xmlres = xml_handler:new()
   local xml_parser = xml2lua.parser(xmlres)
