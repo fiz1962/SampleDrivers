@@ -7,6 +7,10 @@ server_address = ('', 1900)
 
 # Create the socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock2.connect(("8.8.8.8", 80))
+localIP = sock2.getsockname()[0]
+sock2.close()
 
 # Bind to the server address
 sock.bind(server_address)
@@ -28,7 +32,7 @@ while True:
         print("Found light");
         print(address);
         print(data)
-        resp = b'HTTP/1.1 200 OK\r\nCache-Control: max-age=100\r\nEXT: SERVER: NodeMCU/Lua5.1.4 UPnP/1.1\r\nLightBulbESP82660.1\r\nST: upnp:rootdevice\r\nUSN: \r\nuuid:ESP8266-1234\r\nLocation: http://192.168.1.103:8190/LightBulbESP8266.xml\r\n\r\n'
+        resp = b'HTTP/1.1 200 OK\r\nCache-Control: max-age=100\r\nEXT: SERVER: NodeMCU/Lua5.1.4 UPnP/1.1\r\nLightBulbESP82660.1\r\nST: upnp:rootdevice\r\nUSN: \r\nuuid:ESP8266-1234\r\nLocation: http://'+localIP+':8190/LightBulbESP8266.xml\r\n\r\n'
         sock.sendto(resp, address)
         quit()
 
