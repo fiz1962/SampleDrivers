@@ -28,14 +28,9 @@ resp =  b'<root xmlns="urn:schemas-upnp-org:device-1-0" configId="1">\r\n' \
 class S(BaseHTTPRequestHandler):
     OnOff = 0
     lvl   = 50
-    def _set_response(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
 
     def do_GET(self):
-        logging.info("GET request,\nPath: %s\nHeaders:\n%s\nEnd headers\n", str(self.path), str(self.headers))
-        self.send_response(200)
+        logging.info("GET request Path: %s\n", str(self.path) )
         
         if self.path == '/LightBulbESP8266.xml':
             logging.info("Sending light bulb xml\n")
@@ -49,7 +44,11 @@ class S(BaseHTTPRequestHandler):
             logging.info("Sending refresh\n")
 
             OnOffLvL = str(S.lvl*S.OnOff)
+            logging.info("OnOffLvl %f, %d, %s\r\n", S.lvl, S.OnOff, OnOffLvL);
             ref = '{' \
+                  '"status" : "HTTP/1.1 200 OK"' \
+                  '"Content-Type": "application/json"' \
+                  '"Cache-Control" : "no-cache, private"' \
                   '"lvl":"'+OnOffLvL+'",\r\n' \
                   '"clr": {\r\n' \
                   '      "r":"50",\r\n' \
@@ -63,9 +62,14 @@ class S(BaseHTTPRequestHandler):
             self.wfile.write(bytes(ref, 'utf-8'))
             self.send_response(200)
             
+
+            
+    def do_POST(self):
+        logging.info("POST request Path: %s\n", str(self.path))
+
         if self.path == '/control?switch=off':
-            logging.info("Switch off\n")
-            OnOff = 0
+            S.OnOff = 0
+            logging.info("Switch on %d\n", S.OnOff)
             
             self.send_header("code", "200")
             self.send_header("Content-type", "text/xml")
@@ -75,24 +79,14 @@ class S(BaseHTTPRequestHandler):
             self.send_response(200) 
                      
         if self.path == '/control?switch=on':
-            logging.info("Switch on\n")
-            OnOff = 1
+            S.OnOff = 1
+            logging.info("Switch on %d\n", S.OnOff)
             self.send_header("code", "200")
             self.send_header("Content-type", "text/xml")
             self.send_header("status", "HTTP/1.1 200 OK")
             self.end_headers()
             self.wfile.write(b'{"switch";"on", "code":"200"}')
             self.send_response(200)
-            
-    def do_POST(self):
-        logging.info("GET request,\nPath: %s\nHeaders:\n%s\nEnd headers\n", str(self.path), str(self.headers))
-
-        #content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
-        #post_data = self.rfile.read(content_length) # <--- Gets the data itself
-        #l#ogging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
-        #        str(self.path), str(self.headers), post_data.decode('utf-8'))
-
-        #self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
 
 def run(server_class=HTTPServer, handler_class=S, port=8190):
