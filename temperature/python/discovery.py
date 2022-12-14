@@ -11,7 +11,7 @@ sock2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock2.connect(("8.8.8.8", 80))
 localIP = sock2.getsockname()[0]
 sock2.close()
-ipBytes = bytes(localIP,'utf-8')
+ipBytes = bytes(localIP, 'utf-8')
 
 # Bind to the server address
 sock.bind(server_address)
@@ -28,12 +28,12 @@ while True:
     data, address = sock.recvfrom(512)
 
     #print('received %s bytes from %s' % (len(data), address))
-    #print(data)
-    if data.decode().find('LightBulbESP8266:1') != -1:
+    print(data)
+    if data.decode().find('TemperatureESP8266:1') != -1:
         print("Found light");
         print(address);
         print(data)
-        resp = b'HTTP/1.1 200 OK\r\nCache-Control: max-age=100\r\nEXT: SERVER: NodeMCU/Lua5.1.4 UPnP/1.1\r\nLightBulbESP82660.1\r\nST: upnp:rootdevice\r\nUSN: \r\nuuid:ESP8266-1234\r\nLocation: http://'+ipBytes+b':8190/LightBulbESP8266.xml\r\n\r\n'
+        resp = b'HTTP/1.1 200 OK\r\nCache-Control: max-age=100\r\nEXT: SERVER: NodeMCU/Lua5.1.4 UPnP/1.1\r\nTemperatureESP82660.1\r\nST: upnp:rootdevice\r\nUSN: \r\nuuid:ESP8266-1234\r\nLocation: http://'+ipBytes'+b':8191/TemperatureESP8266.xml\r\n\r\n'
         sock.sendto(resp, address)
         quit()
 

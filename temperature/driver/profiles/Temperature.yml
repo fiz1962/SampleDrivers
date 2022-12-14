@@ -1,0 +1,14 @@
+name: Temperature.v1
+components:
+- id: main
+  capabilities:
+  - id: temperatureMeasurement
+    version: 1
+  - id: refresh
+    version: 1
+  categories:
+  - name: Thermostat
+metadata:
+  deviceType: Thermostat
+  ocfDeviceType: oic.d.thermostat
+  deviceTypeId: Thermostat

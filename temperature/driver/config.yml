@@ -1,0 +1,5 @@
+name: 'Edge Temperature'
+packageKey: 'LAN-Temperature'
+permissions:
+  lan: {}
+  discovery: {}
