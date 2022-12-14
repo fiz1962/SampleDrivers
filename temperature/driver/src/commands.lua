@@ -41,7 +41,11 @@ function command_handler.refresh(_, device)
 
     -- Refresh Switch Level
     log.trace('Refreshing temperature ')
-    device:emit_event(caps.temperatureMeasurement.temperature(tonumber(raw_data.temperature)))
+    local temp = {}
+    temp.value = 18
+    temp.unit = "F"
+    
+    device:emit_event(caps.temperatureMeasurement.temperature(temp))
   else
     log.error('failed to poll device state')
     -- Set device as offline
