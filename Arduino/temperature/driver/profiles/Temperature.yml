@@ -9,6 +9,6 @@ components:
   categories:
   - name: Thermostat
 metadata:
-  deviceType: Thermostat
-  ocfDeviceType: oic.d.thermostat
-  deviceTypeId: Thermostat
+  deviceType: Generic Sensor
+  ocfDeviceType: oic.d.sensor
+  deviceTypeId: Generic Sensor
