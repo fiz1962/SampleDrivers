@@ -1,11 +1,16 @@
 #include <ESP8266WebServer.h>
+
+
 #include "config.h"
 
 void startPairing();
 void loopPair();
 void handlePair();
 
-ESP8266WebServer server(8191);
+void tempSetup();
+float getTemp();
+
+ESP8266WebServer server(devPort);
 void handleRoot();
 void handleNotFound();
 void handleRefresh();
@@ -13,6 +18,8 @@ void handlePair();
 void handleProfile();
 
 void startDevice() {
+  tempSetup();
+
   server.on("/", handleRoot);               // Call the 'handleRoot' function when a client requests URI "/"
   server.onNotFound(handleNotFound);        // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
 
@@ -40,7 +47,7 @@ void handleRefresh() {
               "\"Content-Type\":\"application/json\",\r\n" \
               "\"Cache-Control\":\"no-cache, private\",\r\n" \
               "\"temperature\":\"%f\"\r\n" \
-              "}\r\n", 20.+random(10));
+              "}\r\n", getTemp());
   Serial.println("Refresh");
   Serial.println(ref);
   server.send(200, "text/plain", ref);   // Send HTTP status 200 (Ok) and send some text to the browser/client

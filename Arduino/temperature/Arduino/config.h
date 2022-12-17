@@ -6,5 +6,5 @@ const unsigned int       multicastPort = 1900;
 const char        devName[]      = "TemperatureESP8266";
 const unsigned int devPort       = 8191;
 const char       devProfile[]    = "TemperatureESP8266.xml";
-const char        uuid[]          = "ESP8266-1234";       
+const char        uuid[]         = "ESP8266-1234";       
 #endif
