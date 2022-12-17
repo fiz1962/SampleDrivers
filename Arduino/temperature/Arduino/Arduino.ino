@@ -1,16 +1,18 @@
 #include <ESP8266WiFi.h>
-
+#include "FSBrowser.h"
 
 const char* ssid = "*****";
 const char* password = "*****";
-IPAddress local_IP(192, 168, 1, 100);
+IPAddress local_IP(192, 168, 1, 229);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 
 void startDevice();
 void loopDevice();
 void loopOTA();
+//void loopFS();
 void startOTA();
+void setServer();
 
 void setup() {
     Serial.begin(115200);
@@ -32,6 +34,7 @@ void setup() {
 
     startOTA();
     startDevice();
+    setServer();
 }
 
 void loop() {
