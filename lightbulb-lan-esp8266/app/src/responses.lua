@@ -49,7 +49,7 @@ function res_handler.ok_200(body)
   print('res table\r\n{')
   print(table.concat(res))
   print('}\r\n')
-  --res = {table.concat(res, '\r\n'), body}
+  res = {table.concat(res, '\r\n'), body}
 
   return table.concat(res, '\r\n\r\n')
 end

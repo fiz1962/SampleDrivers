@@ -42,7 +42,7 @@ function command_handler.refresh(_, device)
     -- Refresh Switch Level
     log.trace('Refreshing temperature ')
     local temp = {}
-    temp.value = 18
+    temp.value = tonumber(raw_data.temperature)
     temp.unit = "F"
     
     device:emit_event(caps.temperatureMeasurement.temperature(temp))

@@ -29,11 +29,13 @@ while True:
 
     #print('received %s bytes from %s' % (len(data), address))
     print(data)
-    if data.decode().find('TemperatureESP8266:1') != -1:
-        print("Found light");
+    if data.decode().find('TemperatureESP8266') != -1:
+        print("Found temperature");
         print(address);
         print(data)
-        resp = b'HTTP/1.1 200 OK\r\nCache-Control: max-age=100\r\nEXT: SERVER: NodeMCU/Lua5.1.4 UPnP/1.1\r\nTemperatureESP82660.1\r\nST: upnp:rootdevice\r\nUSN: \r\nuuid:ESP8266-1234\r\nLocation: http://'+ipBytes'+b':8191/TemperatureESP8266.xml\r\n\r\n'
+        resp = b'HTTP/1.1 200 OK\r\nCache-Control: max-age=100\r\nEXT: SERVER: NodeMCU/Lua5.1.4 UPnP/1.1\r\nTemperatureESP82660.1\r\nST: upnp:rootdevice\r\nUSN: \r\nuuid:ESP8266-1234\r\nLocation: http://192.168.1.198:8191/TemperatureESP8266.xml\r\n\r\n'
         sock.sendto(resp, address)
+        print(resp)
         quit()
+        
 

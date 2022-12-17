@@ -13,7 +13,7 @@ resp =  b'<root xmlns="urn:schemas-upnp-org:device-1-0" configId="1">\r\n' \
         b'<minor>0</minor>\r\n' \
         b'</specVersion>\r\n' \
         b'<device>\r\n' \
-        b'<deviceType>urn:SmartThingsCommunity:device:Light:1</deviceType>\r\n' \
+        b'<deviceType>urn:SmartThingsCommunity:device:Temperature:1</deviceType>\r\n' \
         b'<presentationURL>/</presentationURL>\r\n' \
         b'<friendlyName>TemperatureESP8266</friendlyName>\r\n' \
         b'<manufacturer>SmartThingsCommunity</manufacturer>\r\n' \
