@@ -1,0 +1,14 @@
+name: ContactSensor.v1
+components:
+- id: main
+  capabilities:
+  - id: contactSensor
+    version: 1
+  - id: refresh
+    version: 1
+  categories:
+  - name: Light
+metadata:
+  deviceType: Contact Sensor
+  ocfDeviceType: x.com.st.d.sensor.contact
+  deviceTypeId: Contact Sensor

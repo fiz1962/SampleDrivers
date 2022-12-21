@@ -1,0 +1,5 @@
+name: 'Edge Contact Sensor'
+packageKey: 'LAN-ContactSensor'
+permissions:
+  lan: {}
+  discovery: {}
