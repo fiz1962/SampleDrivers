@@ -4,6 +4,7 @@ local json = require('dkjson')
 local log = require('log')
 local caps = require('st.capabilities')
 local utils = require('st.utils')
+local commands = require('commands')
 
 local hub_server = {}
 
@@ -20,14 +21,14 @@ function hub_server.start(driver)
     log.info('State pushed')
     local body = json.decode(req:get_body())
     local device = driver:get_device_info(body.uuid)
-    log.info(table.concat(device))
+    --log.info(table.concat(device))
 
-    local contactSensor = {}
-    contactSensor.value = body.contact
-    device:emit_event(caps.contactSensor.contact(contactSensor))
-    --if body.contact then
-    --driver:open_closed(device, body.contact)
-    --end
+    --local contactSensor = {}
+    --contactSensor.value = body.contact
+    --device:emit_event(caps.contactSensor.contact(contactSensor))
+    --if body.contact thenopen_closed(device, command)
+    commands.open_closed(device, body.contact)
+
     res:send('HTTP/1.1 200 OK')
   end)
   server:listen()

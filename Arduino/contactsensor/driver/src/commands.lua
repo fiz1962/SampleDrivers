@@ -29,13 +29,7 @@ function command_handler.refresh(_, device)
 
   -- Check success
   if success then
-    -- Monkey patch due to issues
-    -- on ltn12 lib to fully sink
-    -- JSON payload into table. Last
-    -- bracket is missing.
-    --
-    -- Update below when fixed:  fixed in python device
-    log.info('Refresh\n')
+     log.info('Refresh\n')
     log.info(table.concat(data))
     local raw_data = json.decode(table.concat(data))
 
@@ -57,23 +51,11 @@ function command_handler.refresh(_, device)
 end
 
 -- Switch commad
-function command_handler.open_closed(_, device, command)
-  --local open_closed = command.command
-  -- send command via LAN
-  --local success = command_handler.send_lan_command(
-  --  device.device_network_id,
-  --  'POST',
-  --  'control',
-  --  {contact=open_closed})
-
-  -- Check if success
-  log.info('Comand ' .. command)
+function command_handler.open_closed(device, command)
+  log.info('Command ' .. command)
     local contactSensor = {}
     contactSensor.value = command
     device:emit_event(caps.contactSensor.contact(contactSensor))
-
-  --end
-  log.error('no response from device')
 end
 ------------------------
 -- Send LAN HTTP Request
@@ -90,10 +72,6 @@ function command_handler.send_lan_command(url, method, path, body)
     headers={
       ['Content-Type'] = 'application/x-www-urlencoded'
     }})
-  --print('command handler ret      '..ret)
-  --print('command handler code     '..code)
-  --print('command handler headers  '..headers)
-  --print('command handler status   '..status)
 
   -- Handle response
   if code == 200 then

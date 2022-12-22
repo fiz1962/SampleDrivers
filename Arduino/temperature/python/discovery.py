@@ -5,8 +5,8 @@ import sys
 multicast_group = '239.255.255.250'
 server_address = ('', 1900)
 devType = bytes('TemperatureESP8266', 'utf-8')
-uuid = bytes('ESP8266-1234')
-devPort = bytes('8191', 'uft-8')
+uuid = bytes('ESP8266-1234', 'utf-8')
+devPort = bytes('8191', 'utf-8')
 
 # Create the socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -32,7 +32,7 @@ while True:
 
     #print('received %s bytes from %s' % (len(data), address))
     print(data)
-    if data.decode().find(devType) != -1:
+    if data.decode().find(devType.decode()) != -1:
         print("Found temperature");
         print(address);
         print(data)
