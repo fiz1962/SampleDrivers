@@ -4,13 +4,14 @@
 #include <string>
 #include <FS.h>
 #include <LittleFS.h>
+#include <ESPAsyncWebServer.h>
 
 bool shouldReboot = false;
 const long utcOffsetInSeconds = 3600*(-5);
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
-AsyncWebServer server(8080);
+AsyncWebServer fileServer(8080);
 File fsUploadFile;
 String lastLogs[8];
 
@@ -43,10 +44,10 @@ void LogIt(String msg, bool filter=true) {
       
     timeClient.update();
 
-  String formattedTime = timeClient.getFormattedDate()+" ";
+  String formattedTime = timeClient.getFormattedTime()+" ";
     
 
-    f.print(timeClient.getFormattedDate()+" ");
+    f.print(timeClient.getFormattedTime()+" ");
     f.println(msg);
     f.close();
   }
@@ -125,15 +126,6 @@ void handleFileGPIO(AsyncWebServerRequest *request) {
     sprintf(response, "D8 %d", val);
     LogIt(response);
 
-
-    /*if (request->hasParam("gpio")) {
-      fParam = request->getParam("gpio")->value().toInt();
-      int val = digitalRead(fParam);
-      
-      sprintf(response, "GPIO %d %d", fParam, val);
-      //sprintf(response, "OK");
-    }*/
-
   request->send(202, "text/plain", response);
 }
 
@@ -141,22 +133,22 @@ void notFound(AsyncWebServerRequest *request) {
     request->send(404, "text/plain", "Not found");
 }
 
-void setServer(AsyncWebServer* server) {
-  server->on("/list",  HTTP_GET, [](AsyncWebServerRequest *request) {handleFileList(request);});
-  server->on("/cat",   HTTP_GET, [](AsyncWebServerRequest *request) {handleFileCat(request);});
-  server->on("/del",   HTTP_GET, [](AsyncWebServerRequest *request) {handleFileDel(request);});
-  server->on("/gpio",  HTTP_GET, [](AsyncWebServerRequest *request) {handleFileGPIO(request);});
+void setServer() {
+  fileServer.on("/list",  HTTP_GET, [](AsyncWebServerRequest *request) {handleFileList(request);});
+  fileServer.on("/cat",   HTTP_GET, [](AsyncWebServerRequest *request) {handleFileCat(request);});
+  fileServer.on("/del",   HTTP_GET, [](AsyncWebServerRequest *request) {handleFileDel(request);});
+  fileServer.on("/gpio",  HTTP_GET, [](AsyncWebServerRequest *request) {handleFileGPIO(request);});
   
-  server->onNotFound(notFound);
+  fileServer.onNotFound(notFound);
 
   LittleFS.begin();
     
-  server->serveStatic("/fs", LittleFS, "/");
+  fileServer.serveStatic("/fs", LittleFS, "/");
 
   timeClient.begin();
   File f = LittleFS.open("/Version.txt", "w");
   //String formattedTime = getFullFormattedTime()+" ";
-  f.println(timeClient.getFormattedDate());
+  f.println(timeClient.getFormattedTime());
   f.println("1.0.2");
   f.println(WiFi.getHostname());
   f.close();
@@ -164,5 +156,5 @@ void setServer(AsyncWebServer* server) {
   for(int n=0; n<8; n++)
       lastLogs[n] = "";
       
-  server->begin();
+  fileServer.begin();
   }

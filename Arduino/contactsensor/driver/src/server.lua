@@ -20,6 +20,8 @@ function hub_server.start(driver)
     log.info('State pushed')
     local body = json.decode(req:get_body())
     local device = driver:get_device_info(body.uuid)
+    log.info(table.concat(device))
+
     local contactSensor = {}
     contactSensor.value = body.contact
     device:emit_event(caps.contactSensor.contact(contactSensor))

@@ -39,6 +39,11 @@ void loopDevice() {
   loopPair();
 }
 
+char* getContact() {
+    char* contact = "closed";
+    return(contact);
+}
+
 void handleRefresh() {
   
   char ref[1024];
@@ -46,8 +51,8 @@ void handleRefresh() {
               "\"status\":\"HTTP/1.1 200 OK\",\r\n" \
               "\"Content-Type\":\"application/json\",\r\n" \
               "\"Cache-Control\":\"no-cache, private\",\r\n" \
-              "\"temperature\":\"%f\"\r\n" \
-              "}\r\n", getTemp());
+              "\"contact\":\"%s\"\r\n" \
+              "}\r\n", getContact());
   Serial.println("Refresh");
   Serial.println(ref);
   server.send(200, "text/plain", ref);   // Send HTTP status 200 (Ok) and send some text to the browser/client
@@ -68,10 +73,10 @@ void handleProfile() {
                 "<device>\r\n" \
                 "<deviceType>urn:SmartThingsCommunity:device:Light:1</deviceType>\r\n" \
                 "<presentationURL>/</presentationURL>\r\n" \
-                "<friendlyName>TemperatureESP8266</friendlyName>\r\n" \
+                "<friendlyName>ContactSensorESP8266</friendlyName>\r\n" \
                 "<manufacturer>SmartThingsCommunity</manufacturer>\r\n" \
                 "<manufacturerURL>https://community.smartthings.com</manufacturerURL>\r\n" \
-                "<modelName>LAN Temperature</modelName>\r\n" \
+                "<modelName>LAN contactSensor</modelName>\r\n" \
                 "<serialNumber>SN-ESP8266-899</serialNumber>\r\n" \
                 "<UDN>uuid:9487da-SN-ESP8266-899</UDN>\r\n" \
                 "</device></root>\r\n\r\n"); 
