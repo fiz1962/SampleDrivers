@@ -1,12 +1,7 @@
 import socket
 import struct
 import sys
-
-multicast_group = '239.255.255.250'
-server_address = ('', 1900)
-devType = bytes('TemperatureESP8266', 'utf-8')
-uuid = bytes('ESP8266-1234', 'utf-8')
-devPort = bytes('8191', 'utf-8')
+import config.py
 
 # Create the socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

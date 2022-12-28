@@ -1,0 +1,5 @@
+name: 'WEMO Outlet'
+packageKey: 'com.fiz.wemo'
+permissions:
+  discovery: {}
+  lan: {}

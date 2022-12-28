@@ -6,27 +6,13 @@ Usage::
 """
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
-
-resp =  b'<root xmlns="urn:schemas-upnp-org:device-1-0" configId="1">\r\n' \
-        b'<specVersion>\r\n' \
-        b'<major>2</major>\r\n' \
-        b'<minor>0</minor>\r\n' \
-        b'</specVersion>\r\n' \
-        b'<device>\r\n' \
-        b'<deviceType>urn:SmartThingsCommunity:device:Temperature:1</deviceType>\r\n' \
-        b'<presentationURL>/</presentationURL>\r\n' \
-        b'<friendlyName>TemperatureESP8266</friendlyName>\r\n' \
-        b'<manufacturer>SmartThingsCommunity</manufacturer>\r\n' \
-        b'<manufacturerURL>https://community.smartthings.com</manufacturerURL>\r\n' \
-        b'<modelName>LAN Temperature</modelName>\r\n' \
-        b'<serialNumber>SN-ESP8266-897</serialNumber>\r\n' \
-        b'<UDN>uuid:9487da-SN-ESP8266-897</UDN>\r\n' \
-        b'</device></root>\r\n\r\n'
-              
-
+import requests
+from urllib.parse import urlparse, parse_qs
+import config         
 
 class S(BaseHTTPRequestHandler):
-
+ 
+    
     def do_GET(self):
         logging.info("GET request Path: %s\n", str(self.path) )
         
@@ -53,15 +39,22 @@ class S(BaseHTTPRequestHandler):
             self.wfile.write(bytes(ref, 'utf-8'))
             self.send_response(200)
             
-
-            
     def do_POST(self):
+        global ext_uuid
+        global HUB_IP
+        global HUB_PORT
+        
         strPath = str(self.path)
         logging.info("POST request Path: %s\n", strPath)
-
-        
             
-def run(server_class=HTTPServer, handler_class=S, port=8191):
+        if self.path.startswith('/ping'):
+            u = urlparse(self.path)
+            qs = parse_qs(u.query)
+            ext_uuid = qs['ext_uuid'][0]
+            HUB_IP   = qs['ip'][0]
+            HUB_PORT = qs['port'][0]      
+            
+def run(server_class=HTTPServer, handler_class=S, port=8080):
     logging.basicConfig(level=logging.INFO)
     server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, handler_class)
@@ -76,7 +69,5 @@ def run(server_class=HTTPServer, handler_class=S, port=8191):
 if __name__ == '__main__':
     from sys import argv
 
-    if len(argv) == 2:
-        run(port=int(argv[1]))
-    else:
-        run()
+    run(port=int(config.devPort.decode()))
+

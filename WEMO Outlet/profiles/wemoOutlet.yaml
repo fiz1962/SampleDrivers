@@ -1,11 +1,11 @@
-# hello-world-profile
-name: hello-world.v1
+# wemo outlet profile
+name: WEMO-Outlet.v1
 components:
 - id: main
   capabilities:
   - id: switch
     version: 1
-  - id: temperatureMeasurement
+  - id: refresh
     version: 1
   categories:
   - name: GenericSensor
