@@ -9,3 +9,26 @@ components:
     version: 1
   categories:
   - name: GenericSensor
+metadata:
+  deviceType: SmartPlug
+  ocfDeviceType: oic.d.smartplug
+  deviceTypeId: Smart Plug
+preferences:
+  - name: "motionClearTime"
+    title: "Set Motion Clear Time"
+    description: "PIR time in seconds (default 240)"
+    required: false
+    preferenceType: integer
+    definition:
+      minimum: 10
+      maximum: 3600
+      default: 240
+  - name: "motionSensorSensitivity"
+    title: "Set Motion sensor sensitivity"
+    description: "0-5 where 0 disables the sensor (default 5)"
+    required: false
+    preferenceType: integer
+    definition:
+      minimum: 0
+      maximum: 5
+      default: 5

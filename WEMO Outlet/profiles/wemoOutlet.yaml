@@ -1,5 +1,5 @@
 # wemo outlet profile
-name: WEMO-Outlet.v1
+name: WEMO-Outlet.v3
 components:
 - id: main
   capabilities:
@@ -9,3 +9,8 @@ components:
     version: 1
   categories:
   - name: GenericSensor
+metadata:
+  deviceType: SmartPlug
+  ocfDeviceType: oic.d.smartplug
+  deviceTypeId: Smart Plug
+

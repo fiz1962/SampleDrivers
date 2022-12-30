@@ -16,8 +16,9 @@ function commands.ping(address, port, device)
   log.info('Sending ping')
   log.info(table.concat(ping_data))
   
-  return commands.send_lan_command(
-    device.device_network_id, 'POST', 'ping', ping_data)
+  return 1
+  --return commands.send_lan_command(
+  --  device.device_network_id, 'POST', 'ping', ping_data)
 end
 ------------------
 -- Refresh command
@@ -63,23 +64,14 @@ function commands.refresh(_, device)
 end
 
 -- Switch command
-function commands.on_off(_, device, command)
-  local on_off = command.command
-  log.info('Starting WEMO on/off ' .. on_off)
-  local reqbodyOff = '<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:SetBinaryState xmlns:u="urn:Belkin:service:basicevent:1"><BinaryState>0</BinaryState></u:SetBinaryState></s:Body></s:Envelope>'  
-  
-  local reqbodyOn = '<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:SetBinaryState xmlns:u="urn:Belkin:service:basicevent:1"><BinaryState>1</BinaryState></u:SetBinaryState></s:Body></s:Envelope>'
-
-  local reqbody = reqbodyOff
-  if on_off == "on" then
-    reqbody = reqbodyOn
-  end
-  
+function commands.switch_on(driver, device, command)
+  log.debug(string.format("[%s] calling set_power(on)", device.device_network_id))
+    local reqbodyOn = '<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:SetBinaryState xmlns:u="urn:Belkin:service:basicevent:1"><BinaryState>1</BinaryState></u:SetBinaryState></s:Body></s:Envelope>'
     local respbody = {} 
     local  body, code, headers, status = http.request {
         method = "POST",
         url = device.device_network_id .. '/upnp/control/basicevent1',
-        source = ltn12.source.string(reqbody),
+        source = ltn12.source.string(reqbodyOn),
         headers = 
                 {
                         ["Accept"] = "*/*",
@@ -87,43 +79,39 @@ function commands.on_off(_, device, command)
                         ["Accept-Language"] = "en-us",
                         ["Content-Type"]    = "text/xml; charset=\"utf-8\"",
                         ["SOAPACTION"]      = "\"urn:Belkin:service:basicevent:1#SetBinaryState\"",                
-                        ["content-length"]  = string.len(reqbody)
+                        ["content-length"]  = string.len(reqbodyOn)
                 },
         sink = ltn12.sink.table(respbody)
     }
 log.info('response')
 log.info(table.concat(respbody))
-
- if on_off == 'off' then
-      commands.refresh(_, device)
-      return device:emit_event(caps.switch.switch.off())
- end
- commands.refresh(_, device)
- return device:emit_event(caps.switch.switch.on())
-    
+  device:emit_event(caps.switch.switch.on())
 end
 
-------------------------
--- Send LAN HTTP Request
-function commands.send_lan_command(url, method, path, body)
-  local dest_url = url..'/'..path
-  local query = neturl.buildQuery(body or {})
-  local res_body = {}
-  
-  -- HTTP Request
-  local ret, code, headers, status = http.request({
-    method=method,
-    url=dest_url..'?'..query,
-    sink=ltn12.sink.table(res_body),
-    headers={
-      ['Content-Type'] = 'application/x-www-urlencoded'
-    }})
+-- callback to handle an `off` capability command
+function commands.switch_off(driver, device, command)
+  log.debug(string.format("[%s] calling set_power(off)", device.device_network_id))
+  local reqbodyOff = '<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:SetBinaryState xmlns:u="urn:Belkin:service:basicevent:1"><BinaryState>0</BinaryState></u:SetBinaryState></s:Body></s:Envelope>'  
 
-  -- Handle response
-  if code == 200 then
-    return true, res_body
-  end
-  return false, nil
+    local respbody = {} 
+    local  body, code, headers, status = http.request {
+        method = "POST",
+        url = device.device_network_id .. '/upnp/control/basicevent1',
+        source = ltn12.source.string(reqbodyOff),
+        headers = 
+                {
+                        ["Accept"] = "*/*",
+                        ["Accept-Encoding"] = "gzip, deflate",
+                        ["Accept-Language"] = "en-us",
+                        ["Content-Type"]    = "text/xml; charset=\"utf-8\"",
+                        ["SOAPACTION"]      = "\"urn:Belkin:service:basicevent:1#SetBinaryState\"",                
+                        ["content-length"]  = string.len(reqbodyOff)
+                },
+        sink = ltn12.sink.table(respbody)
+    }
+log.info('response')
+log.info(table.concat(respbody))
+  device:emit_event(caps.switch.switch.off())
 end
 
 return commands

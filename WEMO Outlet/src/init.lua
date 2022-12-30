@@ -16,13 +16,14 @@ local driver =
       discovery = discovery.start,
       lifecycle_handlers = lifecycles,
       supported_capabilities = {
+        caps.switch,
         caps.refresh
       },
       capability_handlers = {
-       [caps.switch.ID] = {
-          [caps.switch.commands.on.NAME] = commands.on_off,
-          [caps.switch.commands.off.NAME] = commands.on_off
-        },
+	    [caps.switch.ID] = {
+	      [caps.switch.commands.on.NAME] = commands.switch_on,
+	      [caps.switch.commands.off.NAME] = commands.switch_off,
+	    },
         -- Refresh command handler
         [caps.refresh.ID] = {
           [caps.refresh.commands.refresh.NAME] = commands.refresh

@@ -3,7 +3,7 @@ local config = {}
 -- NOTE: In the future this information
 -- may be submitted through the Developer
 -- Workspace to avoid hardcoded values.
-config.DEVICE_PROFILE='WEMO-Outlet.v1'
+config.DEVICE_PROFILE='WEMO-Outlet.v3'
 config.DEVICE_TYPE='LAN'
 -- SSDP Config
 config.MC_ADDRESS='239.255.255.250'
