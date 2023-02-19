@@ -1,5 +1,5 @@
 # wemo outlet profile
-name: WEMO-Outlet.v3
+name: WEMO-Outlet.v4
 components:
 - id: main
   capabilities:

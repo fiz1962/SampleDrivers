@@ -32,7 +32,7 @@ function hub_server.start(driver)
     res:send('HTTP/1.1 200 OK')
   end)
   server:listen()
-  driver.server = server
+  log.info('Server '  .. server.port)
 end
 
 return hub_server
