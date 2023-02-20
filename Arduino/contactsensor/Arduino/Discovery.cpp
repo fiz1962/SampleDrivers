@@ -9,10 +9,13 @@ char buf[4096];
 char resp[4096];
 
 void startPairing() {
-    
+    //long chipID = ESP.getChipId();
+    //Serial.println(chipID);
+    //Serial.println(WiFi.localIP());
+
     sprintf(resp, "HTTP/1.1 200 OK\r\nCache-Control: max-age=100\r\n" \
     "EXT: SERVER: NodeMCU/Lua5.1.4 UPnP/1.1\r\n%s.1\r\n" \
-    "ST: upnp:rootdevice\r\nUSN: \r\nuuid:%s\r\nLocation: http://%s:%d/%s\r\n\r\n", devName, uuid, "192.168.1.220", devPort, devProfile);
+    "ST: upnp:rootdevice\r\nUSN: \r\ESP8266-%li:%s\r\nLocation: http://%s:%d/%s\r\n\r\n", devName, ESP.getChipId(), WiFi.localIP(), devPort, devProfile);
  
     UDP.begin(multicastPort);
     UDP.beginMulticast(WiFi.localIP(), multicastIP, multicastPort);

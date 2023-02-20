@@ -11,7 +11,7 @@ local server = require('server')
 -- Driver definition
 local driver =
   Driver(
-    'LAN-Contact Sensor',
+    'Edge Contact Sensor',
     {
       discovery = discovery.start,
       lifecycle_handlers = lifecycles,
@@ -26,8 +26,6 @@ local driver =
       }
     }
   )
-
-
 
 -----------------------------
 -- Initialize Hub server

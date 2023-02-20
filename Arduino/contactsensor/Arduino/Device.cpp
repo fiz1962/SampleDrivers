@@ -1,31 +1,35 @@
 #include <ESP8266WebServer.h>
 
-
 #include "config.h"
 
 void startPairing();
 void loopPair();
 void handlePair();
 
-void tempSetup();
-float getTemp();
+void contactSetup();
+char* getContact();
+void CheckContact();
+void setST(String STServer, String STPort, String STUUID);
 
 ESP8266WebServer server(devPort);
-void handleRoot();
-void handleNotFound();
+
 void handleRefresh();
 void handlePair();
 void handleProfile();
+void handlePing();
+void handleNotFound();
+void handleRoot();
 
 void startDevice() {
-  tempSetup();
+  contactSetup();
 
   server.on("/", handleRoot);               // Call the 'handleRoot' function when a client requests URI "/"
   server.onNotFound(handleNotFound);        // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
 
   server.on("/refresh", handleRefresh);
-  server.on("/pair",     handlePair);
-  
+  server.on("/pair",    handlePair);
+  server.on("/ping",    handlePing);
+
   char prof[1024];
   sprintf(prof, "/%s", devProfile);
   server.on(prof, handleProfile);
@@ -37,11 +41,12 @@ void startDevice() {
 void loopDevice() {
   server.handleClient();
   loopPair();
+  CheckContact();
 }
 
-char* getContact() {
-    char* contact = "closed";
-    return(contact);
+void handlePing() {
+  setST(server.arg("ip"), server.arg("port"), server.arg("ext_uuid"));
+  server.send(200, "text/plain", "Ping");
 }
 
 void handleRefresh() {

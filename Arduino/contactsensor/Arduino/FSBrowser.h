@@ -46,7 +46,6 @@ void LogIt(String msg, bool filter=true) {
 
   String formattedTime = timeClient.getFormattedTime()+" ";
     
-
     f.print(timeClient.getFormattedTime()+" ");
     f.println(msg);
     f.close();

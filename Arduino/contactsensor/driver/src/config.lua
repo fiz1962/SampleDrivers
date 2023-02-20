@@ -16,5 +16,5 @@ config.MSEARCH=table.concat({
   'MX: 4',
   'ST: urn:SmartThingsCommunity:device:ContactSensorESP8266:1'
 }, '\r\n')
-config.SCHEDULE_PERIOD=300
+config.SCHEDULE_PERIOD=60
 return config
