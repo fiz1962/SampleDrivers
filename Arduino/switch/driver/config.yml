@@ -1,0 +1,5 @@
+name: 'Edge Switch'
+packageKey: 'LAN-Switch'
+permissions:
+  lan: {}
+  discovery: {}
