@@ -1,4 +1,4 @@
-Install temperature edge driver, up 1 folder.
+Install contact sensor edge driver, up 1 folder.
 Most settings in config.h
 Flash device.
 To enter pairing mode   http://{ipaddress}:{port}/pair
