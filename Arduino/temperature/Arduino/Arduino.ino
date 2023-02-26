@@ -6,11 +6,12 @@ const char* password = "*****";
 IPAddress local_IP(192, 168, 1, 100);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
+IPAddress primaryDNS(8, 8, 8, 8);
 
 void startDevice();
 void loopDevice();
 void loopOTA();
-//void loopFS();
+
 void startOTA();
 void setServer();
 
@@ -18,7 +19,7 @@ void setup() {
     Serial.begin(115200);
     Serial.println();
   
-    if (!WiFi.config(local_IP, gateway, subnet)) {
+    if (!WiFi.config(local_IP, gateway, subnet, primaryDNS)) {
       Serial.println("STA Failed to configure");
     }
 
@@ -32,9 +33,12 @@ void setup() {
     Serial.println("connected");
     Serial.println(WiFi.localIP());
 
-    startOTA();
-    startDevice();
-    setServer();
+
+  startOTA();
+  startDevice();
+  setServer();
+
+  LogIt("Started");
 }
 
 void loop() {

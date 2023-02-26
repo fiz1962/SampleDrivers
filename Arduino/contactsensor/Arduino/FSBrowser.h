@@ -1,16 +1,13 @@
-#include <NTPClient.h>
 #include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
+
 #include <string>
 #include <FS.h>
 #include <LittleFS.h>
 #include <ESPAsyncWebServer.h>
 
-bool shouldReboot = false;
-const long utcOffsetInSeconds = 3600*(-5);
+void startDateTime();
+String getDateTime();
 
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 AsyncWebServer fileServer(8080);
 File fsUploadFile;
 String lastLogs[8];
@@ -41,12 +38,9 @@ void LogIt(String msg, bool filter=true) {
           lastLogs[n-1] = lastLogs[n];
       lastLogs[7] = msg;
     }
-      
-    timeClient.update();
-
-  String formattedTime = timeClient.getFormattedTime()+" ";
     
-    f.print(timeClient.getFormattedTime()+" ");
+
+    f.print(getDateTime());
     f.println(msg);
     f.close();
   }
@@ -119,13 +113,7 @@ void handleFileGPIO(AsyncWebServerRequest *request) {
     sprintf(response, "D6 %d", val);
     LogIt(response);
     val = digitalRead(D7);
-    sprintf(response, "D7 %d", val);
-    LogIt(response);
-    val = digitalRead(D8);
-    sprintf(response, "D8 %d", val);
-    LogIt(response);
-
-  request->send(202, "text/plain", response);
+    //sprintf(response,timeClient.getFormattedTime
 }
 
 void notFound(AsyncWebServerRequest *request) {
@@ -144,11 +132,11 @@ void setServer() {
     
   fileServer.serveStatic("/fs", LittleFS, "/");
 
-  timeClient.begin();
+  startDateTime();
   File f = LittleFS.open("/Version.txt", "w");
   //String formattedTime = getFullFormattedTime()+" ";
-  f.println(timeClient.getFormattedTime());
-  f.println("1.0.2");
+  f.println(getDateTime());
+  f.println("1.0.5");
   f.println(WiFi.getHostname());
   f.close();
 
@@ -156,4 +144,4 @@ void setServer() {
       lastLogs[n] = "";
       
   fileServer.begin();
-  }
+}

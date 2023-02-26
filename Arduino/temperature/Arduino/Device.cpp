@@ -1,14 +1,14 @@
 #include <ESP8266WebServer.h>
 
-
 #include "config.h"
 
 void startPairing();
 void loopPair();
-void handlePair();
 
 void tempSetup();
 float getTemp();
+
+void LogIt(String msg, bool filter=true);
 
 ESP8266WebServer server(devPort);
 void handleRoot();
@@ -51,10 +51,9 @@ void handleRefresh() {
   Serial.println("Refresh");
   Serial.println(ref);
   server.send(200, "text/plain", ref);   // Send HTTP status 200 (Ok) and send some text to the browser/client
-}
 
-void handlePair() {
-  startPairing();
+ //LogIt("Refresh");ar
+  //loopFS();
   server.send(200, "text/plain", "Pairing started");
 }
 
@@ -64,7 +63,7 @@ void handleProfile() {
                 "<specVersion>\r\n" \
                 "<major>2</major>\r\n" \
                 "<minor>0</minor>\r\n" \
-                "</specVersion>\r\n" \
+                "</specVrequestersion>\r\n" \
                 "<device>\r\n" \
                 "<deviceType>urn:SmartThingsCommunity:device:Light:1</deviceType>\r\n" \
                 "<presentationURL>/</presentationURL>\r\n" \
@@ -76,6 +75,11 @@ void handleProfile() {
                 "<UDN>uuid:9487da-SN-ESP8266-899</UDN>\r\n" \
                 "</device></root>\r\n\r\n"); 
    server.send(200, "text/plain", resp);   // Send HTTP status 200 (Ok) and send some text to the browser/client
+}
+
+void handlePair() {
+  startPairing();
+  server.send(200, "text/plain", "Pairing started");
 }
 
 void handleRoot() {
