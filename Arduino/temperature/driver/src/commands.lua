@@ -39,7 +39,7 @@ function command_handler.refresh(_, device)
     -- Define online status
     device:online()
 
-    -- Refresh Switch Level
+    -- Refresh temperature
     log.trace('Refreshing temperature ')
     local temp = {}
     temp.value = tonumber(raw_data.temperature)

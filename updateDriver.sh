@@ -1,3 +1,3 @@
 #!/bin/bash
 
-../smartthings edge:drivers:package "Arduino/switch/driver" -I
+../smartthings edge:drivers:package "hello-world" -I

@@ -7,6 +7,24 @@ local log = require "log"
 local command_handlers = require "command_handlers"
 local discovery = require "discovery"
 
+local lifecycle_handler = {}
+
+function lifecycle_handler.init(driver, device)
+  -------------------
+  -- Set up scheduled
+  -- services once the
+  -- driver gets
+  -- initialized.
+
+  -- Refresh schedule
+  device.thread:call_on_schedule(
+    60,
+    function ()
+      return command_handlers.refresh(nil, device)
+    end,
+    'Refresh schedule')
+end
+
 -----------------------------------------------------------------
 -- local functions
 -----------------------------------------------------------------
@@ -36,14 +54,21 @@ local hello_world_driver = Driver("helloworld", {
   discovery = discovery.handle_discovery,
   lifecycle_handlers = {
     added = device_added,
-    init = device_init,
+    init = lifecycle_handler.init,
     removed = device_removed
+  },
+  supported_capabilities = {
+    capabilities.refresh
   },
   capability_handlers = {
     [capabilities.switch.ID] = {
       [capabilities.switch.commands.on.NAME] = command_handlers.switch_on,
       [capabilities.switch.commands.off.NAME] = command_handlers.switch_off,
     },
+    -- Refresh command handler
+    [capabilities.refresh.ID] = {
+        [capabilities.refresh.commands.refresh.NAME] = command_handlers.refresh
+    }
   }
 })
 
