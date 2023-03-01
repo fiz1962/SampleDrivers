@@ -18,7 +18,7 @@ function lifecycle_handler.init(driver, device)
 
   -- Refresh schedule
   device.thread:call_on_schedule(
-    60,
+    300,
     function ()
       return command_handlers.refresh(nil, device)
     end,
