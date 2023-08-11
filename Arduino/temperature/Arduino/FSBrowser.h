@@ -1,3 +1,6 @@
+#ifndef __FSBROWSER__
+#define __FSBROWSER__
+
 #include <ESP8266WiFi.h>
 
 #include <string>
@@ -9,7 +12,7 @@ void startDateTime();
 String getDateTime();
 
 AsyncWebServer fileServer(8080);
-File fsUploadFile;
+//File fsUploadFile;
 String lastLogs[8];
 
 void LogIt(String msg, bool filter=true) {
@@ -145,3 +148,5 @@ void setServer() {
       
   fileServer.begin();
 }
+
+#endif;

@@ -1,5 +1,5 @@
 #include <ESP8266WiFi.h>
-#include "FSBrowser.h"
+//#include "FSBrowser.h"
 
 const char* ssid = "*****";
 const char* password = "*****";
@@ -38,7 +38,7 @@ void setup() {
   startDevice();
   setServer();
 
-  LogIt("Started");
+  //LogIt("Started");
 }
 
 void loop() {

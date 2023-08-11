@@ -15,7 +15,7 @@ class S(BaseHTTPRequestHandler):
 
             #self.send_header("Content-type", "text/xml")
             #self.end_headers()
-            self.wfile.write(resp)
+            self.wfile.write(config.resp)
             self.send_response(200)
 
         if self.path == '/refresh?':

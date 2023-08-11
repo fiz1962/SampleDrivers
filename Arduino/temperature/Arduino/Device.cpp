@@ -63,9 +63,9 @@ void handleProfile() {
                 "<specVersion>\r\n" \
                 "<major>2</major>\r\n" \
                 "<minor>0</minor>\r\n" \
-                "</specVrequestersion>\r\n" \
+                "</specVersion>\r\n" \
                 "<device>\r\n" \
-                "<deviceType>urn:SmartThingsCommunity:device:Light:1</deviceType>\r\n" \
+                "<deviceType>urn:SmartThingsCommunity:device:TemperatureESP8266:1</deviceType>\r\n" \
                 "<presentationURL>/</presentationURL>\r\n" \
                 "<friendlyName>TemperatureESP8266</friendlyName>\r\n" \
                 "<manufacturer>SmartThingsCommunity</manufacturer>\r\n" \
