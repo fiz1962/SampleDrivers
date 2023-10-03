@@ -9,11 +9,11 @@
 #include <ESPAsyncWebServer.h>
 
 void startDateTime();
-String getDateTime();
+char* getDateTime();
 
 AsyncWebServer fileServer(8080);
-//File fsUploadFile;
 String lastLogs[8];
+int LEDOnOff;
 
 void LogIt(String msg, bool filter=true) {
     File f = LittleFS.open("/f.txt", "a");
@@ -72,6 +72,12 @@ void handleFileList(AsyncWebServerRequest *request) {
 
 void handleFileCat(AsyncWebServerRequest *request) {
     String fParam;
+    if( LEDOnOff == 1)
+        LEDOnOff = 0;
+        else
+        LEDOnOff = 1;
+        
+      digitalWrite(2, LEDOnOff);
     if (request->hasParam("file")) {
       fParam = request->getParam("file")->value();
     } else {
@@ -79,6 +85,11 @@ void handleFileCat(AsyncWebServerRequest *request) {
     }
 
   request->send(LittleFS, fParam, "text/plain");
+}
+
+void handleReboot(AsyncWebServerRequest *request) {
+    ESP.restart();
+    request->send(202, "text/plain", "Reboot");
 }
 
 void handleFileDel(AsyncWebServerRequest *request) {
@@ -93,41 +104,17 @@ void handleFileDel(AsyncWebServerRequest *request) {
   request->send(202, "text/plain", response);
 }
 
-void handleFileGPIO(AsyncWebServerRequest *request) {
-    int fParam;
-    char response[256];
-    sprintf(response , "Logging gpio");
-    int val = digitalRead(D1);
-    sprintf(response, "D1 %d", val);
-    LogIt(response);
-    val = digitalRead(D2);
-    sprintf(response, "D2 %d", val);
-    LogIt(response);
-    val = digitalRead(D3);
-    sprintf(response, "D3 %d", val);
-    LogIt(response);
-    val = digitalRead(D4);
-    sprintf(response, "D4 %d", val);
-    LogIt(response);
-    val = digitalRead(D5);
-    sprintf(response, "D5 %d", val);
-    LogIt(response);
-    val = digitalRead(D6);
-    sprintf(response, "D6 %d", val);
-    LogIt(response);
-    val = digitalRead(D7);
-    //sprintf(response,timeClient.getFormattedTime
-}
-
 void notFound(AsyncWebServerRequest *request) {
     request->send(404, "text/plain", "Not found");
 }
 
 void setServer() {
+  LEDOnOff = 1;
+  pinMode(2, OUTPUT);
+  digitalWrite(2, LEDOnOff);
   fileServer.on("/list",  HTTP_GET, [](AsyncWebServerRequest *request) {handleFileList(request);});
   fileServer.on("/cat",   HTTP_GET, [](AsyncWebServerRequest *request) {handleFileCat(request);});
   fileServer.on("/del",   HTTP_GET, [](AsyncWebServerRequest *request) {handleFileDel(request);});
-  fileServer.on("/gpio",  HTTP_GET, [](AsyncWebServerRequest *request) {handleFileGPIO(request);});
   
   fileServer.onNotFound(notFound);
 

@@ -4,24 +4,19 @@
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
+void LogIt(String msg, bool filter=true);
 
 void startDateTime() {
   timeClient.begin();  
-  timeClient.setTimeOffset(0);
+  timeClient.setTimeOffset(-5*3600);
   timeClient.update();
   delay(1000); //give ntp a bit of time to get started
 }
 
-String getDateTime() {
-  timeClient.update();
-  unsigned long epochTime = timeClient.getEpochTime();
-  struct tm *ptm = gmtime ((time_t *)&epochTime); 
-  int monthDay     = ptm->tm_mday;
-  int currentMonth = ptm->tm_mon+1;
-  int currentYear = ptm->tm_year+1900;
+char* getDateTime() {
+  //timeClient.update();
+  time_t epochTime = timeClient.getEpochTime();
+  char* strtime = asctime(localtime(&epochTime));
 
-  String t = String(currentMonth) + "/" + String(monthDay) + "/" + String(currentYear) + " " + timeClient.getFormattedTime();
-  Serial.println(t);
-  
-  return t;
+  return strtime;
 }
