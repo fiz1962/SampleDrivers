@@ -44,9 +44,9 @@ void setST(String thisServer, String thisPort, String thisUUID) {
 }
 
 void contactSetup() {
-  STServer = "";
-  STPort = "";
-  String STUUID = "";
+  //STServer = "";
+  //STPort = "";
+  //String STUUID = "";
   lastState = "";
 
   pinMode(pin, INPUT_PULLUP);

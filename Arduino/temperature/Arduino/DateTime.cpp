@@ -8,7 +8,7 @@ void LogIt(String msg, bool filter=true);
 
 void startDateTime() {
   timeClient.begin();  
-  timeClient.setTimeOffset(-5*3600);
+  timeClient.setTimeOffset(-6*3600);
   timeClient.update();
   delay(1000); //give ntp a bit of time to get started
 }

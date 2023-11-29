@@ -7,4 +7,6 @@ const char        devName[]      = "TemperatureESP8266:1";
 const unsigned int devPort       = 8191;
 const char       devProfile[]    = "TemperatureESP8266.xml";
 const char        uuid[]         = "ESP8266-1535";       
+
+
 #endif
