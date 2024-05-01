@@ -9,22 +9,23 @@ void handlePair();
 
 void tempSetup();
 float getTemp();
-void LogIt(String msg, bool filter=true);
 
-ESP8266WebServer server(devPort);
+ESP8266WebServer serverDevice(devPort);
 String STServer;
 String STPort;
 String STUUID;
 int lastState;
 
 void handleRoot();
-void handleNotFound();
+void handleNotFound2();
 void handleRefresh();
 void handlePair();
 void handleProfile();
 void handlePing();
+void LogIt(String msg);
 
 void startDevice() {
+  LogIt("Starting device");
   tempSetup();
   pinMode(D7, INPUT_PULLUP);
 
@@ -33,47 +34,37 @@ void startDevice() {
   STUUID    = "";
   lastState = -1;
 
-  server.on("/", handleRoot);               // Call the 'handleRoot' function when a client requests URI "/"
-  server.onNotFound(handleNotFound);        // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
+  serverDevice.on("/", handleRoot);               // Call the 'handleRoot' function when a client requests URI "/"
+  serverDevice.onNotFound(handleNotFound2);        // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
 
-  server.on("/refresh", handleRefresh);
-  server.on("/pair",     handlePair);
-  server.on("/ping",     handlePing);
+  serverDevice.on("/refresh", handleRefresh);
+  serverDevice.on("/pair",     handlePair);
+  serverDevice.on("/ping",     handlePing);
   
   char prof[1024];
   sprintf(prof, "/%s", devProfile);
-  server.on(prof, handleProfile);
+  serverDevice.on(prof, handleProfile);
   
-  server.begin();                           // Actually start the server
+  serverDevice.begin();                           // Actually start the server
   Serial.println("HTTP server started");
 }
 
 void loopDevice() {
-  server.handleClient();
+  serverDevice.handleClient();
   loopPair();
   if( digitalRead(D7)!= lastState ) {
     lastState = digitalRead(D7);
     if( STServer != "" ) {
       HTTPClient http;
       WiFiClient client;
-      String cl = "http://"+STServer+":"+STPort+"/push-state";
-      http.begin(client, cl);
+      http.begin(client, "http://"+STServer+":"+STPort+"/push-state");
       http.addHeader("Content-Type", "application/json");
-      char buf[1024];
       
       int httpResponseCode;
-      if( lastState == 1 ) {
-          sprintf(buf, "{\"uuid\":\"%s\",\"contact\":\"open\"}", STUUID.c_str());
-          httpResponseCode = http.POST(buf);
-          LogIt("Door opened");
-          LogIt(cl.c_str());          
-          LogIt(buf);
-      }
-      else
-      {
+      if( lastState == 1 )
           httpResponseCode = http.POST("{\"uuid\":\"" + STUUID + "\",\n\"contact\":\"closed\"}");
-          LogIt("Door closed");
-      }
+      else
+          httpResponseCode = http.POST("{\"uuid\":\"" + STUUID + "\",\n\"contact\":\"open\"}");
 
     }
   }
@@ -96,21 +87,21 @@ void handleRefresh() {
               "\"contact\":\"%s\"\r\n" \
               "}\r\n", getTemp(), contactState);
 
-  LogIt(ref);
-  server.send(200, "text/plain", ref);   // Send HTTP status 200 (Ok) and send some text to the browser/client
+  LogIt(String(ref));
+  serverDevice.send(200, "text/plain", ref);   // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
 void handlePing() {
-  STServer = server.arg("ip");
-  STPort   = server.arg("port");
-  STUUID   = server.arg("ext_uuid");
+  STServer = serverDevice.arg("ip");
+  STPort   = serverDevice.arg("port");
+  STUUID   = serverDevice.arg("ext_uuid");
 
-  server.send(200, "text/plain", "Ping");
+  serverDevice.send(200, "text/plain", "Ping");
 }
 
 void handlePair() {
   startPairing();
-  server.send(200, "text/plain", "Pairing started");
+  serverDevice.send(200, "text/plain", "Pairing started");
 }
 
 void handleProfile() {
@@ -130,13 +121,13 @@ void handleProfile() {
                 "<serialNumber>SN-ESP8266-899</serialNumber>\r\n" \
                 "<UDN>uuid:9487da-SN-ESP8266-899</UDN>\r\n" \
                 "</device></root>\r\n\r\n"); 
-   server.send(200, "text/plain", resp);   // Send HTTP status 200 (Ok) and send some text to the browser/client
+   serverDevice.send(200, "text/plain", resp);   // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
 void handleRoot() {
-  server.send(200, "text/plain", "Hello world!");   // Send HTTP status 200 (Ok) and send some text to the browser/client
+  serverDevice.send(200, "text/plain", "Hello world!");   // Send HTTP status 200 (Ok) and send some text to the browser/client
 }
 
-void handleNotFound(){
-  server.send(404, "text/plain", "404: Not found"); // Send HTTP status 404 (Not Found) when there's no handler for the URI in the request
+void handleNotFound2(){
+  serverDevice.send(404, "text/plain", "404: Not found"); // Send HTTP status 404 (Not Found) when there's no handler for the URI in the request
 }

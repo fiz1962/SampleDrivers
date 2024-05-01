@@ -39,20 +39,13 @@ function command_handler.refresh(_, device)
     -- Define online status
     device:online()
 
-    -- Refresh temperature
-    if raw_data.temperature ~= nil then
-        log.trace('Refreshing temperature ')
-        local temp = {}
-        temp.value = tonumber(raw_data.temperature)
-        temp.unit = "F"
-        device:emit_event(caps.temperatureMeasurement.temperature(temp))
-    end
-    -- Refresh contact
-    if raw_data.contact ~= nil then
-        local contact = {}
-        contact.value = raw_data.contact
-        device:emit_event(caps.contactSensor.contact(contact))
-    end
+    -- Refresh Switch Level
+    log.trace('Refreshing temperature ')
+    local temp = {}
+    temp.value = tonumber(raw_data.temperature)
+    temp.unit = "F"
+    
+    device:emit_event(caps.temperatureMeasurement.temperature(temp))
   else
     log.error('failed to poll device state')
     -- Set device as offline

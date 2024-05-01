@@ -7,7 +7,6 @@ DallasTemperature sensors(&oneWire);
 
 void tempSetup() {
     sensors.begin();
-    pinMode(SensorDataPin, INPUT_PULLUP);
 }
 
 float getTemp() {

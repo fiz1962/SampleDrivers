@@ -1,7 +1,12 @@
 #include <ArduinoOTA.h>
+#include <ESP8266HTTPUpdateServer.h>
+
+ESP8266WebServer* getServer();
+ESP8266HTTPUpdateServer httpUpdater;
 
 void startOTA() {
-    ArduinoOTA.onStart([]() {
+  httpUpdater.setup(getServer(), "xxx", "xxx");
+    /*ArduinoOTA.onStart([]() {
     String type;
     if (ArduinoOTA.getCommand() == U_FLASH) {
       type = "sketch";
@@ -32,9 +37,9 @@ void startOTA() {
       Serial.println("End Failed");
     }
   });
-  ArduinoOTA.begin();
+  ArduinoOTA.begin();*/
 }
 
 void loopOTA() {
-  ArduinoOTA.handle();
+  //ArduinoOTA.handle();
 }

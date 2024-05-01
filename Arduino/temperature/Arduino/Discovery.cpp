@@ -3,15 +3,13 @@
 #include "config.h"
 
 WiFiUDP UDP;
-
-
-void LogIt(String msg, bool filter=true);
+//unsigned int multicastPort = 1900;  // local port to listen on
+//IPAddress multicastIP(239,255,255,250);
 
 void startPairing() {
-
-
     UDP.begin(multicastPort);
     UDP.beginMulticast(WiFi.localIP(), multicastIP, multicastPort);
+    Serial.printf("Now listening at IP %s and %s, UDP port %d\n", WiFi.localIP().toString().c_str(), multicastIP.toString().c_str(), multicastPort);
 }
 
 void stopParing() {
@@ -21,6 +19,7 @@ void stopParing() {
 
 void loopPair() {
   char buf[2048];
+
     int packetSize = UDP.parsePacket();
     if (packetSize) {
       int len = UDP.read(buf, 4096);
@@ -28,10 +27,13 @@ void loopPair() {
         Serial.println(buf);
         if( strstr(buf, devName) ) {
             sprintf(buf, "HTTP/1.1 200 OK\r\nCache-Control: max-age=100\r\n" \
-                "EXT: SERVER: NodeMCU/Lua5.1.4 UPnP/1.1\r\n%s\r\n" \
-                "ST: upnp:rootdevice\r\nUSN: %s\r\nLocation: http://%s:%d/%s \r\n\r\n", \
-                devName, "1535", WiFi.localIP().toString().c_str(), devPort, devProfile);
-
+                "EXT: SERVER: NodeMCU/Lua5.1.4 UPnP/1.1\r\n%s.1\r\n" \
+                 "ST: upnp:rootdevice\r\nUSN: \r\nuuid:%s\r\nLocation: http://%s:%d/%s\r\n\r\n", devName, uuid, "192.168.1.229", devPort, devProfile);
+ 
+            Serial.println("Response");
+            Serial.println(UDP.remoteIP());
+            Serial.println(UDP.remotePort());
+            Serial.println(buf);
             UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
             UDP.write(buf);
             UDP.endPacket();

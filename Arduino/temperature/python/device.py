@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-
+"""
+Very simple HTTP server in python for logging requests
+Usage::
+    ./server.py [<port>]
+"""
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 import requests
@@ -7,6 +11,8 @@ from urllib.parse import urlparse, parse_qs
 import config         
 
 class S(BaseHTTPRequestHandler):
+ 
+    
     def do_GET(self):
         logging.info("GET request Path: %s\n", str(self.path) )
         
@@ -15,7 +21,7 @@ class S(BaseHTTPRequestHandler):
 
             #self.send_header("Content-type", "text/xml")
             #self.end_headers()
-            self.wfile.write(config.resp)
+            self.wfile.write(resp)
             self.send_response(200)
 
         if self.path == '/refresh?':
