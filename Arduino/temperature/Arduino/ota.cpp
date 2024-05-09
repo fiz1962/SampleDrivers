@@ -5,7 +5,7 @@ ESP8266WebServer* getServer();
 ESP8266HTTPUpdateServer httpUpdater;
 
 void startOTA() {
-  httpUpdater.setup(getServer(), "xxx", "xxx");
+  httpUpdater.setup(getServer(), "admin", "hillie");
     /*ArduinoOTA.onStart([]() {
     String type;
     if (ArduinoOTA.getCommand() == U_FLASH) {

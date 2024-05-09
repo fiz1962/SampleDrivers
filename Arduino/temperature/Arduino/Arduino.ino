@@ -1,4 +1,5 @@
 #include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
 
 void startDevice();
 void loopDevice();
@@ -11,8 +12,8 @@ void loopServer();
 void startNTP();
 
 void setup() {
-const char* ssid = "xxxx";
-const char* password = "xxxx";
+const char* ssid = "***";
+const char* password = "***";
 IPAddress local_IP(192, 168, 1, 100);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
@@ -37,6 +38,11 @@ IPAddress subnet(255, 255, 255, 0);
     Serial.println("connected");
     Serial.println(WiFi.localIP());
 
+  if (!MDNS.begin("ESP")) {
+    //Serial.println("Error setting up MDNS responder!");
+    //while (1) { delay(1000); }
+  }
+
     //startOTA();
     startDevice();
     //setServer();
@@ -49,4 +55,5 @@ void loop() {
   loopOTA();
   loopDevice();
   loopServer();
+  MDNS.update();
 }
