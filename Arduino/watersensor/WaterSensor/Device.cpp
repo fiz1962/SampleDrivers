@@ -14,7 +14,7 @@ ESP8266WebServer serverDevice(devPort);
 String STServer;
 String STPort;
 String STUUID;
-int lastState;
+String lastState;
 
 void handleRoot();
 void handleNotFound2();
@@ -32,7 +32,7 @@ void startDevice() {
   STServer  = "";
   STPort    = "";
   STUUID    = "";
-  lastState = -1;
+  lastState = "dry";
 
   serverDevice.on("/", handleRoot);               // Call the 'handleRoot' function when a client requests URI "/"
   serverDevice.onNotFound(handleNotFound2);        // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
@@ -52,8 +52,9 @@ void startDevice() {
 void loopDevice() {
   serverDevice.handleClient();
   loopPair();
-  if( digitalRead(D7)!= lastState ) {
-    lastState = digitalRead(D7);
+  String thisState = getWater();
+  if( thisState != lastState ) {
+    lastState = thisState;
     if( STServer != "" ) {
       HTTPClient http;
       WiFiClient client;
@@ -61,7 +62,7 @@ void loopDevice() {
       http.addHeader("Content-Type", "application/json");
       
       int httpResponseCode;
-      if( lastState == 1 )
+      if( lastState == "wet" )
           httpResponseCode = http.POST("{\"uuid\":\"" + STUUID + "\",\n\"water\":\"wet\"}");
       else
           httpResponseCode = http.POST("{\"uuid\":\"" + STUUID + "\",\n\"water\":\"dry\"}");

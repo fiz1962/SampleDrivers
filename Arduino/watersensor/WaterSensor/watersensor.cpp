@@ -1,23 +1,21 @@
-//#include <OneWire.h>
-//#include <DallasTemperature.h>
 #include <Arduino.h>
 
-const int SensorDataPin = D4;
+const int SensorDataPin = A0;
 String lastWater;
 
-//OneWire oneWire(SensorDataPin);
-//DallasTemperature sensors(&oneWire);
 void makePlot(double newT);
 
 void waterSetup() {
+  pinMode(SensorDataPin, INPUT_PULLUP);
   lastWater = "dry";
 }
 
 String getWater() {
-  if( lastWater == "dry" )
-      lastWater = "wet";
-  else
-      lastWater = "dry";
-
+  int sensor = analogRead(SensorDataPin);
+  //Serial.println(sensor);
+  //set lastWater "wet" or "dry"
+  lastWater = "dry";
+  if( sensor > 256 )
+    lastWater = "wet";
   return(lastWater);
 }
