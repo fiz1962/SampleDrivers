@@ -1,9 +1,8 @@
+
 #include <Arduino.h>
 
 const int SensorDataPin = A0;
 String lastWater;
-
-void makePlot(double newT);
 
 void waterSetup() {
   pinMode(SensorDataPin, INPUT_PULLUP);
