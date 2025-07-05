@@ -1,0 +1,14 @@
+name: WaterSensor.v1
+components:
+- id: main
+  capabilities:
+  - id: waterSensor
+    version: 1
+  - id: refresh
+    version: 1
+  categories:
+  - name: LeakSensor
+metadata:
+  deviceType: Leak Sensor
+  ocfDeviceType: x.com.st.d.sensor.moisture
+  deviceTypeId: Leak Sensor

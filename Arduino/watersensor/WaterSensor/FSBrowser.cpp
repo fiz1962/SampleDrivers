@@ -28,7 +28,7 @@ String authFailResponse = "Authentication Failed";
 ESP8266WebServer server(8081);
 //AutoConnect      Portal(server);
 bool authServer() {
-    if (!server.authenticate("****", "****")) {
+    if (!server.authenticate(www_username, www_password)) {
       server.requestAuthentication(DIGEST_AUTH, www_realm, authFailResponse);
       return false;
     }
@@ -454,7 +454,7 @@ void startFSBrowser() {
     ////////////////////////////////
     // FILESYSTEM INIT
 
-    fileSystemConfig.setAutoFormat(false);
+    fileSystemConfig.setAutoFormat(true);
     fileSystem->setConfig(fileSystemConfig);
     fsOK = fileSystem->begin();
     DBG_OUTPUT_PORT.println(fsOK ? F("Filesystem initialized.") : F("Filesystem init failed!"));

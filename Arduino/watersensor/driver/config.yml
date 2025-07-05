@@ -1,0 +1,5 @@
+name: 'Edge Water Sensor'
+packageKey: 'LAN-WaterSensor'
+permissions:
+  lan: {}
+  discovery: {}
